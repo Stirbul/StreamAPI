@@ -14,12 +14,14 @@ public class Main {
         User a = new User.Builder("Andrei")
                 .balance(100.0)
                 .emails(new ArrayList<String>(List.of("adsgsdg","sdgsg","sdgsg")))
+                .roles(new ArrayList<String>(List.of("worker, driver")))
                 .registrationDate(LocalDateTime.of(2008,1,19,4,30))
                 .build();
 
         User b = new User.Builder("Volodea")
                 .balance(99.0)
                 .isActive(true)
+                .roles(new ArrayList<String>(List.of("worker")))
                 .registrationDate(LocalDateTime.of(2008,2,20,5,30))
                 .build();
 
@@ -27,6 +29,7 @@ public class Main {
                 .balance(1000000.0)
                 .emails(new ArrayList<String>(List.of("214234","235235","sdg235235sg")))
                 .isActive(true)
+                .roles(new ArrayList<String>(List.of("driver")))
                 .registrationDate(LocalDateTime.of(2007,3,21,6,32))
                 .build();
 
@@ -34,6 +37,7 @@ public class Main {
                 .balance(120.0)
                 .emails(new ArrayList<String>(List.of("21sgdg4234","2352dsgsg35","sdg235sd235sg")))
                 .isActive(true)
+                .roles(new ArrayList<String>(List.of("worker, driver")))
                 .registrationDate(LocalDateTime.of(2008,4,22,7,30))
                 .build();
 
@@ -79,10 +83,20 @@ public class Main {
         System.out.println();
 
         //6)group Users by their roles(Map<Role, List<User>>)
-//        System.out.println("6");
-//        Map<String, List<User>> ans = userList.stream()
-//                .collect(Collectors.groupingBy(r -> r.get))
-//        System.out.println();
+        System.out.println("6");
+        Map<String, List<String>> map =
+                new HashMap<>();
+        for (User u : userList){
+            List<String> list = new ArrayList<>();
+            for(String role : u.getRoles()){
+                if (u.getRoles().contains(role)) {
+                    list.add(u.getName());
+                }
+                map.putIfAbsent(role,list);
+            }
+        }
+        System.out.println(map);
+        System.out.println();
 
         //7)Get Set from List
         System.out.println("7");
@@ -105,10 +119,23 @@ public class Main {
                 .filter(u -> u.getBalance() > 10000).findFirst().orElse(null));
         System.out.println();
 
+        //10) Reduce all users names into 1 coma separated String
+        System.out.println("10");
+        System.out.println(userList.stream()
+                .map(User::getName)
+                .collect(Collectors.joining(","))
+        );
+        System.out.println();
+
+
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Map<Object,Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
+    private static List<String> apply(String k) {
+        return new ArrayList<>();
     }
 }
