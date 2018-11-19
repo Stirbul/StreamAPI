@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 public class Main {
 
@@ -72,8 +73,8 @@ public class Main {
         // parallel() for using not the first User
         System.out.println("4");
         System.out.println(userList.stream().parallel()
-                .map(User::getEmails).findAny()
-                .stream().collect(Collectors.toList())
+                .map(User::getEmails)
+                .collect(Collectors.toList())
         );
         System.out.println();
 
@@ -127,15 +128,33 @@ public class Main {
         );
         System.out.println();
 
+        System.out.println("Cartesian Pruduct \n\n");
+        List<Integer> ints = new ArrayList<>(List.of(1,2,3));
+        List<Character> chars = new ArrayList<>(List.of('x','y','z'));
+
+        List<String> cartesian = new ArrayList<>();
+        ints.forEach(i -> chars.forEach(z -> cartesian.add(z + String.valueOf(i))));
+        System.out.println(cartesian);
+
+        int count = ints.size();
+        for (int i = 0; i < cartesian.size(); ++i) {
+                System.out.print(cartesian.get(i) + " ");
+            if (count == i+1) {
+                count *= 2;
+                System.out.println();
+            }
+        }
+
+        System.out.println("\n\nFactorial");
+        int n = 5;
+        System.out.println(IntStream.rangeClosed(2,n).reduce(1, (g,h) -> g*h));
+
+
 
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Map<Object,Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-    }
-
-    private static List<String> apply(String k) {
-        return new ArrayList<>();
     }
 }
