@@ -88,12 +88,9 @@ public class Main {
         Map<String, List<String>> map =
                 new HashMap<>();
         for (User u : userList){
-            List<String> list = new ArrayList<>();
             for(String role : u.getRoles()){
-                if (u.getRoles().contains(role)) {
-                    list.add(u.getName());
-                }
-                map.putIfAbsent(role,list);
+                map.putIfAbsent(role,userList.stream().filter(k -> k.getRoles()
+                        .contains(role)).map(User::getName).collect(Collectors.toList()));
             }
         }
         System.out.println(map);
